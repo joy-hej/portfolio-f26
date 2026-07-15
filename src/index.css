@@ -57,7 +57,7 @@
   /* Colors from frame */
   --color-bg: #ddd8c4;
   --color-text: #000000;
-  --color-nav-track: rgba(255, 255, 255, 0.3);
+  --color-nav-track: rgba(255, 255, 255, 0.14);
   --color-nav-active: #ffffff;
   --color-border: rgba(0, 0, 0, 0.1);
 }

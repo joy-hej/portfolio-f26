@@ -162,34 +162,36 @@ export default function Wireframe() {
     <div className={`wireframe${playMode ? ' wireframe--play' : ''}`}>
       <header className="wireframe__header">
         <div
-          className={`wireframe__pill${navHidden ? ' wireframe__pill--hidden' : ''}`}
+          className={`wireframe__pill-wrap${navHidden ? ' wireframe__pill-wrap--hidden' : ''}`}
         >
-          <button
-            type="button"
-            className="wireframe__logo"
-            onClick={() => goTo('work')}
-          >
-            joy he
-          </button>
-          <nav className="wireframe__nav" aria-label="Primary">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item}
-                href={`#${item}`}
-                className={
-                  item === section
-                    ? 'wireframe__nav-item wireframe__nav-item--active'
-                    : 'wireframe__nav-item'
-                }
-                onClick={(e) => {
-                  e.preventDefault()
-                  goTo(item)
-                }}
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
+          <div className="wireframe__pill">
+            <button
+              type="button"
+              className="wireframe__logo"
+              onClick={() => goTo('work')}
+            >
+              joy he
+            </button>
+            <nav className="wireframe__nav" aria-label="Primary">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item}
+                  href={`#${item}`}
+                  className={
+                    item === section
+                      ? 'wireframe__nav-item wireframe__nav-item--active'
+                      : 'wireframe__nav-item'
+                  }
+                  onClick={(e) => {
+                    e.preventDefault()
+                    goTo(item)
+                  }}
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
       </header>
 
