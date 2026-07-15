@@ -8,4 +8,8 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
   ],
+  // Keep standard backdrop-filter — default minify was dropping it in prod
+  build: {
+    cssMinify: 'esbuild',
+  },
 })
