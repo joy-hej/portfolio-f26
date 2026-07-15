@@ -1,0 +1,46 @@
+.asterisk-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.12s ease;
+  will-change: transform;
+  overflow: visible;
+}
+
+.asterisk-cursor--visible {
+  opacity: 1;
+}
+
+.asterisk-cursor--hot {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.asterisk-cursor svg {
+  display: block;
+  overflow: visible;
+}
+
+html.has-asterisk-cursor,
+html.has-asterisk-cursor * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .asterisk-cursor {
+    transition: opacity 0.12s ease;
+  }
+
+  .asterisk-cursor--hot {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}

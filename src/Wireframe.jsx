@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import locationIcon from './assets/portfolio/location.svg'
 import bookIcon from './assets/portfolio/book.svg'
 import tributaryImg from './assets/portfolio/tributary.png'
 import lightModeImg from './assets/portfolio/light-mode.png'
 import nudgeImg from './assets/portfolio/nudge.png'
 import whereableImg from './assets/portfolio/whereable.png'
+import { readPacificSky } from './pacificSky'
 import './Wireframe.css'
 
 const NAV_ITEMS = ['work', 'play', 'about', 'resume']
@@ -100,18 +101,53 @@ function useRevealOnScroll(rootRef, enabled, resetKey) {
   }, [rootRef, enabled, resetKey])
 }
 
+function usePacificSky() {
+  const [sky, setSky] = useState(() => readPacificSky())
+
+  useEffect(() => {
+    const tick = () => setSky(readPacificSky())
+    tick()
+    const id = window.setInterval(tick, 1000)
+    return () => window.clearInterval(id)
+  }, [])
+
+  return sky
+}
+
 export default function Wireframe() {
   const [section, setSection] = useState('work')
   const [pageKey, setPageKey] = useState(0)
   const [pageVisible, setPageVisible] = useState(true)
   const [navHidden, setNavHidden] = useState(false)
+  const [pill, setPill] = useState({ left: 0, width: 0, ready: false })
   const pageRef = useRef(null)
+  const navRef = useRef(null)
+  const itemRefs = useRef({})
   const lastScrollY = useRef(0)
   const reducedMotion = usePrefersReducedMotion()
-  const playMode = section === 'play'
-  const showContent = section !== 'play'
+  const sky = usePacificSky()
 
-  useRevealOnScroll(pageRef, showContent && pageVisible, pageKey)
+  useRevealOnScroll(pageRef, pageVisible, pageKey)
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const nav = navRef.current
+      const el = itemRefs.current[section]
+      if (!nav || !el) return
+      const navBox = nav.getBoundingClientRect()
+      const box = el.getBoundingClientRect()
+      setPill({
+        left: box.left - navBox.left,
+        width: box.width,
+        ready: true,
+      })
+    }
+
+    measure()
+    document.fonts?.ready?.then(measure)
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [section, navHidden])
 
   useEffect(() => {
     lastScrollY.current = window.scrollY
@@ -136,20 +172,21 @@ export default function Wireframe() {
   }, [])
 
   const goTo = (next) => {
-    if (next === section && pageVisible) return
+    if (next === section && pageVisible) {
+      window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
+      setNavHidden(false)
+      return
+    }
 
     const finish = () => {
       setSection(next)
       setPageKey((k) => k + 1)
       setPageVisible(true)
       setNavHidden(false)
-      if (next !== 'play') {
-        window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
-      }
+      window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
     }
 
-    // No content to fade out when leaving play (or reduced motion)
-    if (reducedMotion || section === 'play') {
+    if (reducedMotion) {
       finish()
       return
     }
@@ -159,24 +196,30 @@ export default function Wireframe() {
   }
 
   return (
-    <div className={`wireframe${playMode ? ' wireframe--play' : ''}`}>
+    <div className="wireframe">
       <header className="wireframe__header">
         <div
           className={`wireframe__pill-wrap${navHidden ? ' wireframe__pill-wrap--hidden' : ''}`}
         >
           <div className="wireframe__pill">
-            <button
-              type="button"
-              className="wireframe__logo"
-              onClick={() => goTo('work')}
-            >
-              joy he
-            </button>
-            <nav className="wireframe__nav" aria-label="Primary">
+            <p className="wireframe__logo">joy he</p>
+            <nav ref={navRef} className="wireframe__nav" aria-label="Primary">
+              <span
+                className={`wireframe__nav-pill${pill.ready ? ' wireframe__nav-pill--ready' : ''}`}
+                style={{
+                  transform: `translateX(${pill.left}px)`,
+                  width: pill.width,
+                }}
+                aria-hidden
+              />
               {NAV_ITEMS.map((item) => (
                 <a
                   key={item}
+                  ref={(el) => {
+                    itemRefs.current[item] = el
+                  }}
                   href={`#${item}`}
+                  data-label={item}
                   className={
                     item === section
                       ? 'wireframe__nav-item wireframe__nav-item--active'
@@ -195,12 +238,11 @@ export default function Wireframe() {
         </div>
       </header>
 
-      {showContent && (
-        <div
-          key={pageKey}
-          ref={pageRef}
-          className={`wireframe__page${pageVisible ? ' wireframe__page--in' : ' wireframe__page--out'}`}
-        >
+      <div
+        key={pageKey}
+        ref={pageRef}
+        className={`wireframe__page${pageVisible ? ' wireframe__page--in' : ' wireframe__page--out'}`}
+      >
           {section === 'work' && (
             <>
               <section className="wireframe__intro" data-reveal>
@@ -224,10 +266,11 @@ export default function Wireframe() {
               </section>
 
               {PROJECTS.map((project) => (
-                <article
+                <a
                   key={project.id}
                   id={project.id}
                   className={`wireframe__project wireframe__project--${project.id}`}
+                  href={`#${project.id}`}
                 >
                   <div className="wireframe__media">
                     <img src={project.image} alt={project.alt} />
@@ -241,9 +284,16 @@ export default function Wireframe() {
                       {project.description}
                     </p>
                   </div>
-                </article>
+                </a>
               ))}
             </>
+          )}
+
+          {section === 'play' && (
+            <section className="wireframe__placeholder" data-reveal>
+              <h1 className="wireframe__headline text-Subtitle">Play</h1>
+              <p className="text-body">Placeholder — play experiments coming soon.</p>
+            </section>
           )}
 
           {section === 'about' && (
@@ -262,34 +312,38 @@ export default function Wireframe() {
 
           <footer className="wireframe__footer" data-reveal>
             <div className="wireframe__footer-col">
-              <p className="wireframe__footer-label text-body">Contact</p>
-              <a className="text-body" href="mailto:hello@example.com">
-                hello@example.com
+              <p className="wireframe__footer-title">say hi</p>
+              <a className="text-body" href="mailto:joy.hej@outlook.com">
+                joy.hej@outlook.com
+              </a>
+              <a
+                className="text-body wireframe__footer-note"
+                href="https://www.linkedin.com/in/joy-hej/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                LinkedIn
               </a>
             </div>
-            <div className="wireframe__footer-col">
-              <p className="wireframe__footer-label text-body">Elsewhere</p>
-              <div className="wireframe__footer-links">
-                <a className="text-body" href="#linkedin">
-                  LinkedIn
-                </a>
-                <a className="text-body" href="#github">
-                  GitHub
-                </a>
-                <a className="text-body" href="#are.na">
-                  Are.na
-                </a>
-              </div>
+            <div className="wireframe__footer-col wireframe__footer-col--center">
+              <p className="wireframe__footer-title">sky watch</p>
+              <p className="text-body">{sky.sunLabel}</p>
+              <p
+                className="text-body wireframe__footer-note wireframe__footer-time"
+                aria-live="polite"
+              >
+                {sky.timeLabel}
+              </p>
             </div>
             <div className="wireframe__footer-col wireframe__footer-col--end">
-              <p className="text-body">© {new Date().getFullYear()} Joy He</p>
+              <p className="wireframe__footer-title">changelog</p>
+              <p className="text-body">07-15-26</p>
               <p className="text-body wireframe__footer-note">
-                Placeholder footer
+                ✳ made in berkeley
               </p>
             </div>
           </footer>
         </div>
-      )}
     </div>
   )
 }

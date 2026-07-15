@@ -1,0 +1,59 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Wash shows through — no solid cover */
+  background: transparent;
+  opacity: 1;
+  transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: auto;
+}
+
+.loader--out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.loader__asterisk {
+  width: min(42vw, 220px);
+  height: min(42vw, 220px);
+  animation: loader-spin 2.4s linear infinite;
+  will-change: transform;
+}
+
+.loader__asterisk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@keyframes loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader__asterisk {
+    animation: none;
+  }
+}

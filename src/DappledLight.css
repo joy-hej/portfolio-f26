@@ -19,6 +19,10 @@
   filter: blur(0.4px);
 }
 
+.organic--plain .organic__canvas {
+  visibility: hidden;
+}
+
 .organic__grain {
   position: absolute;
   inset: 0;

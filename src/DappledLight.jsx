@@ -35,7 +35,7 @@ export const DEFAULT_WASH = {
   grainAmp: 0.10379611985223766,
 }
 
-/** Pigment ramp: light → mid → dark (c0…c4). */
+/** Pigment ramp: light → mid → dark (c0…c4) — sage green wash. */
 export const DEFAULT_COLORS = {
   c0: [242, 236, 220],
   c1: [210, 214, 190],
@@ -43,6 +43,9 @@ export const DEFAULT_COLORS = {
   c3: [96, 118, 78],
   c4: [58, 74, 52],
 }
+
+/** Plain mode paper — no dapple wash. */
+const PLAIN_PAPER = [241, 241, 241]
 
 function cloneColors(c) {
   return {
@@ -81,78 +84,6 @@ function randomWash() {
     bandWeight: rand(0.45, 0.75),
     grainScale: rand(12, 28),
     grainAmp: rand(0.04, 0.12),
-  }
-}
-
-function hslToRgb(h, s, l) {
-  const hh = ((h % 360) + 360) % 360
-  const c = (1 - Math.abs(2 * l - 1)) * s
-  const x = c * (1 - Math.abs(((hh / 60) % 2) - 1))
-  const m = l - c / 2
-  let r = 0
-  let g = 0
-  let b = 0
-  if (hh < 60) [r, g, b] = [c, x, 0]
-  else if (hh < 120) [r, g, b] = [x, c, 0]
-  else if (hh < 180) [r, g, b] = [0, c, x]
-  else if (hh < 240) [r, g, b] = [0, x, c]
-  else if (hh < 300) [r, g, b] = [x, 0, c]
-  else [r, g, b] = [c, 0, x]
-  return [
-    Math.round((r + m) * 255),
-    Math.round((g + m) * 255),
-    Math.round((b + m) * 255),
-  ]
-}
-
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
-}
-
-/**
- * Multi-hue wash ramps — paper → mist → mid → deep → ink.
- * Hues jump deliberately so c gets blues/pinks/purples, not one-tint monochrome.
- */
-function randomColors() {
-  // [paperHue, mistHue, midHue, deepHue, inkHue]
-  const recipes = [
-    [42, 95, 100, 110, 115], // original sage
-    [48, 205, 230, 255, 270], // sky → periwinkle → violet
-    [20, 340, 330, 310, 285], // blush → rose → magenta → plum
-    [40, 280, 295, 265, 250], // cream → lavender → orchid → indigo
-    [25, 15, 340, 310, 275], // peach → coral → fuchsia → purple
-    [200, 190, 215, 230, 245], // ice → cyan → cobalt → midnight
-    [50, 350, 310, 280, 265], // butter → pink → lilac → violet
-    [210, 200, 185, 220, 235], // cool paper → teal → navy
-    [42, 95, 350, 340, 330], // cream → sage → dusty rose → wine
-    [45, 165, 250, 260, 270], // ivory → seafoam → periwinkle → indigo
-    [15, 25, 350, 335, 320], // blush → apricot → raspberry → berry
-    [220, 210, 280, 290, 255], // moon → soft blue → orchid → ink
-    [55, 85, 160, 200, 230], // citrus → chartreuse → teal → deep blue
-    [330, 300, 270, 240, 225], // pink mist → violet → blue → ink
-    [35, 200, 210, 25, 15], // complementary warm / cool jump
-    [50, 140, 330, 290, 270], // split triad: green, pink, purple
-  ]
-
-  const hues = pick(recipes).map((h) => h + rand(-12, 12))
-  const sats = [
-    rand(0.06, 0.16),
-    rand(0.18, 0.38),
-    rand(0.28, 0.55),
-    rand(0.32, 0.6),
-    rand(0.28, 0.55),
-  ]
-  if (Math.random() < 0.45) {
-    sats[2] = clamp01(sats[2] + 0.12)
-    sats[3] = clamp01(sats[3] + 0.1)
-  }
-
-  return {
-    c0: hslToRgb(hues[0], sats[0], rand(0.9, 0.96)),
-    c1: hslToRgb(hues[1], sats[1], rand(0.76, 0.88)),
-    c2: hslToRgb(hues[2], sats[2], rand(0.48, 0.64)),
-    c3: hslToRgb(hues[3], sats[3], rand(0.3, 0.44)),
-    c4: hslToRgb(hues[4], sats[4], rand(0.16, 0.28)),
   }
 }
 
@@ -218,8 +149,8 @@ function makePaperGrainUrl() {
 
 /** Finish lightening over this many viewports of scroll (lower = faster). */
 const SCROLL_DISTANCE_VH = 1
-/** Compress pigment ~halfway toward cream — dappling stays ~50%. */
-const MAX_COLOR_LIFT = 0.5
+/** Compress pigment toward light grey — higher = more fade. */
+const MAX_COLOR_LIFT = 1
 
 /** Steady march through noise space — same speed at every moment. */
 function ambientWash(elapsedMs) {
@@ -232,20 +163,29 @@ function ambientWash(elapsedMs) {
   }
 }
 
-/** Scroll-driven in-place repaint — lighter greens/cream, not opacity fade. */
+/** Scroll-driven in-place repaint — mix toward light grey. */
 function scrollPaint(progress) {
   const p = progress
   return {
     colorLift: p * MAX_COLOR_LIFT,
-    brightWeight: p * 0.14,
-    bandWeight: -p * 0.13,
-    topLeftWeight: -p * 0.045,
-    lowerWeight: -p * 0.055,
-    brightRadius: p * 0.16,
-    bandMix: p * 0.035 + Math.sin(p * Math.PI) * 0.02,
+    liftColor: PLAIN_PAPER,
+    brightWeight: p * 0.22,
+    bandWeight: -p * 0.2,
+    topLeftWeight: -p * 0.07,
+    lowerWeight: -p * 0.09,
+    brightRadius: p * 0.24,
+    bandMix: p * 0.05 + Math.sin(p * Math.PI) * 0.025,
     warpAmpX: Math.sin(p * Math.PI * 0.9) * 0.03,
     warpAmpY: Math.cos(p * Math.PI * 0.75) * 0.025,
   }
+}
+
+function lerpRgb(a, b, t) {
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * t),
+    Math.round(a[1] + (b[1] - a[1]) * t),
+    Math.round(a[2] + (b[2] - a[2]) * t),
+  ]
 }
 
 export default function DappledLight() {
@@ -254,6 +194,7 @@ export default function DappledLight() {
   const rootRef = useRef(null)
   const washRef = useRef({ ...savedWash })
   const colorsRef = useRef(cloneColors(savedColors))
+  const dappleActiveRef = useRef(true)
 
   useEffect(() => {
     const grain = grainRef.current
@@ -284,8 +225,23 @@ export default function DappledLight() {
     const startTime = performance.now()
 
     const syncPaper = () => {
-      const paper = rgbCss(colorsRef.current.c0)
-      if (rootRef.current) rootRef.current.style.background = paper
+      if (!rootRef.current) return
+      if (!dappleActiveRef.current) {
+        rootRef.current.style.background = rgbCss(PLAIN_PAPER)
+        return
+      }
+      const lift = scrollSmooth * MAX_COLOR_LIFT
+      rootRef.current.style.background = rgbCss(
+        lerpRgb(colorsRef.current.c0, PLAIN_PAPER, lift),
+      )
+    }
+
+    const syncDapple = () => {
+      const on = dappleActiveRef.current
+      if (rootRef.current) {
+        rootRef.current.classList.toggle('organic--plain', !on)
+      }
+      syncPaper()
     }
 
     const readScroll = () => {
@@ -294,6 +250,8 @@ export default function DappledLight() {
     }
 
     const tick = (now = performance.now()) => {
+      if (!dappleActiveRef.current) return
+
       const ease = reduceMotion ? 1 : 0.12
       scrollSmooth += (scrollTarget - scrollSmooth) * ease
       if (Math.abs(scrollTarget - scrollSmooth) <= 0.0008) {
@@ -305,6 +263,7 @@ export default function DappledLight() {
         ...scrollPaint(scrollSmooth),
       }
       renderer.render(washRef.current, colorsRef.current, paint)
+      syncPaper()
 
       const scrollSettled = scrollSmooth === scrollTarget
       if (ambientActive || !scrollSettled) {
@@ -315,10 +274,14 @@ export default function DappledLight() {
     }
 
     const kick = () => {
+      if (!dappleActiveRef.current) return
       if (!raf) raf = requestAnimationFrame(tick)
     }
 
     const bake = () => {
+      syncPaper()
+      if (!dappleActiveRef.current) return
+
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
       const viewW = Math.max(1, Math.floor(window.innerWidth * dpr))
       const viewH = Math.max(1, Math.floor(window.innerHeight * dpr))
@@ -359,10 +322,16 @@ export default function DappledLight() {
         console.log('[dappled] random wash', washRef.current)
         bake()
       } else if (e.key === 'c' || e.key === 'C') {
-        colorsRef.current = randomColors()
-        syncPaper()
-        console.log('[dappled] random colors', colorsRef.current)
-        bake()
+        dappleActiveRef.current = !dappleActiveRef.current
+        syncDapple()
+        if (dappleActiveRef.current) {
+          bake()
+          kick()
+        } else {
+          cancelAnimationFrame(raf)
+          raf = 0
+        }
+        console.log('[dappled] dapple', dappleActiveRef.current ? 'on' : 'off')
       } else if (e.key === 'x' || e.key === 'X') {
         savedWash = { ...washRef.current }
         savedColors = cloneColors(colorsRef.current)
@@ -371,15 +340,17 @@ export default function DappledLight() {
         washRef.current = { ...savedWash }
         colorsRef.current = cloneColors(savedColors)
         syncPaper()
+        if (dappleActiveRef.current) bake()
         console.log('[dappled] restored default wash + colors')
-        bake()
       }
     }
 
-    syncPaper()
-    bake()
-    readScroll()
-    kick()
+    syncDapple()
+    if (dappleActiveRef.current) {
+      bake()
+      readScroll()
+      kick()
+    }
 
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)

@@ -35,6 +35,7 @@ uniform float u_grainAmp;
 uniform float u_seedX;
 uniform float u_seedY;
 uniform float u_colorLift;
+uniform vec3 u_liftColor;
 uniform vec3 u_c0;
 uniform vec3 u_c1;
 uniform vec3 u_c2;
@@ -147,7 +148,7 @@ vec3 colorAt(float pigment) {
 void main() {
   float pigment = sampleWash(v_uv);
   pigment = mix(pigment, pigment * (1.0 - u_colorLift * 0.68) + 0.05, u_colorLift);
-  vec3 rgb = colorAt(pigment) / 255.0;
+  vec3 rgb = mix(colorAt(pigment), u_liftColor, u_colorLift) / 255.0;
   gl_FragColor = vec4(rgb, 1.0);
 }
 `
@@ -241,6 +242,7 @@ export function createWashRenderer(canvas) {
     seedX: gl.getUniformLocation(program, 'u_seedX'),
     seedY: gl.getUniformLocation(program, 'u_seedY'),
     colorLift: gl.getUniformLocation(program, 'u_colorLift'),
+    liftColor: gl.getUniformLocation(program, 'u_liftColor'),
     c0: gl.getUniformLocation(program, 'u_c0'),
     c1: gl.getUniformLocation(program, 'u_c1'),
     c2: gl.getUniformLocation(program, 'u_c2'),
@@ -286,6 +288,8 @@ export function createWashRenderer(canvas) {
     gl.uniform1f(uni.seedX, cfg.seedX)
     gl.uniform1f(uni.seedY, cfg.seedY)
     gl.uniform1f(uni.colorLift, a.colorLift ?? 0)
+    const lift = a.liftColor ?? [241, 241, 241]
+    gl.uniform3f(uni.liftColor, lift[0], lift[1], lift[2])
   }
 
   return {

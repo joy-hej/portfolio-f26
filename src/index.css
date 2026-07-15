@@ -1,11 +1,17 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Iansui&family=Poppins:wght@400;700&display=swap');
+/* Self-hosted HanziPen SC (latin subset) — private browsing can't use system fonts */
+@font-face {
+  font-family: 'HanziPen SC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/HanzipenSC-Regular.woff2') format('woff2');
+}
 
 :root {
   /* Font families */
   --font-family-poppins: 'Poppins', sans-serif;
-  /* Figma: HanziPen SC — Iansui is a close open pen-handwriting stand-in */
-  --font-family-logo: 'HanziPen SC', 'Hanzipen SC', 'Iansui', cursive;
+  --font-family-logo: 'HanziPen SC', 'Hanzipen SC', cursive;
 
   /* Font weights */
   --font-weight-regular: 400;
@@ -60,6 +66,11 @@
   --color-nav-track: rgba(255, 255, 255, 0.14);
   --color-nav-active: #ffffff;
   --color-border: rgba(0, 0, 0, 0.1);
+
+  /* Fallback ✳ if custom follower is off (touch / coarse pointer) */
+  --cursor-asterisk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%23000' transform='translate(16 16)'%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(45)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(90)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(135)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(180)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(225)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(270)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(315)'/%3E%3Ccircle r='1.5'/%3E%3C/g%3E%3C/svg%3E")
+    16 16,
+    auto;
 }
 
 *,
@@ -73,10 +84,20 @@ body {
   font-family: var(--font-family-poppins);
   color: var(--color-text);
   background: var(--color-bg);
+  cursor: var(--cursor-asterisk);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a,
+button,
+[role='button'],
+label[for],
+select,
+summary {
+  cursor: var(--cursor-asterisk);
 }
 
 #root {
