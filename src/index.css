@@ -1,10 +1,11 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Iansui&family=Poppins:wght@400;700&display=swap');
 
 :root {
   /* Font families */
   --font-family-poppins: 'Poppins', sans-serif;
- 
+  /* Figma: HanziPen SC — Iansui is a close open pen-handwriting stand-in */
+  --font-family-logo: 'HanziPen SC', 'Hanzipen SC', 'Iansui', cursive;
 
   /* Font weights */
   --font-weight-regular: 400;
@@ -39,11 +40,11 @@
   --text-body-line-height: var(--line-height-normal);
   --text-body-letter-spacing: var(--letter-spacing-0);
 
-  /* Untitled styles used in the frame (logo, nav) */
-  --text-logo-font-family: var(--font-family-poppins);
+  /* Logo: HanziPen SC Regular 32 / 32 */
+  --text-logo-font-family: var(--font-family-logo);
   --text-logo-font-size: var(--font-size-32);
-  --text-logo-font-weight: var(--font-weight-bold);
-  --text-logo-line-height: var(--line-height-tight);
+  --text-logo-font-weight: var(--font-weight-regular);
+  --text-logo-line-height: 32px;
   --text-logo-letter-spacing: var(--letter-spacing-0);
 
   --text-nav-font-family: var(--font-family-poppins);
@@ -56,7 +57,7 @@
   /* Colors from frame */
   --color-bg: #ddd8c4;
   --color-text: #000000;
-  --color-nav-track: rgba(0, 0, 0, 0.05);
+  --color-nav-track: rgba(255, 255, 255, 0.3);
   --color-nav-active: #ffffff;
   --color-border: rgba(0, 0, 0, 0.1);
 }

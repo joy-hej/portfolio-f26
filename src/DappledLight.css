@@ -1,4 +1,4 @@
-/* Ambient pigment drift; static grain overlay. */
+/* Wash lightens on scroll via pigment repaint; ambient drift underneath. */
 
 .organic {
   position: fixed;

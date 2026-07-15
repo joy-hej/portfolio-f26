@@ -34,6 +34,12 @@ uniform float u_grainScale;
 uniform float u_grainAmp;
 uniform float u_seedX;
 uniform float u_seedY;
+uniform float u_colorLift;
+uniform vec3 u_c0;
+uniform vec3 u_c1;
+uniform vec3 u_c2;
+uniform vec3 u_c3;
+uniform vec3 u_c4;
 
 float hash2(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -126,26 +132,22 @@ float sampleWash(vec2 uv) {
 }
 
 vec3 colorAt(float pigment) {
-  vec3 cream = vec3(242.0, 236.0, 220.0);
-  vec3 mist = vec3(210.0, 214.0, 190.0);
-  vec3 sage = vec3(150.0, 168.0, 120.0);
-  vec3 moss = vec3(96.0, 118.0, 78.0);
-  vec3 olive = vec3(58.0, 74.0, 52.0);
-
   if (pigment < 0.28) {
-    return lerp3(cream, mist, smoothstepRange(0.0, 0.28, pigment));
+    return lerp3(u_c0, u_c1, smoothstepRange(0.0, 0.28, pigment));
   }
   if (pigment < 0.5) {
-    return lerp3(mist, sage, smoothstepRange(0.28, 0.5, pigment));
+    return lerp3(u_c1, u_c2, smoothstepRange(0.28, 0.5, pigment));
   }
   if (pigment < 0.72) {
-    return lerp3(sage, moss, smoothstepRange(0.5, 0.72, pigment));
+    return lerp3(u_c2, u_c3, smoothstepRange(0.5, 0.72, pigment));
   }
-  return lerp3(moss, olive, smoothstepRange(0.72, 1.0, pigment));
+  return lerp3(u_c3, u_c4, smoothstepRange(0.72, 1.0, pigment));
 }
 
 void main() {
-  vec3 rgb = colorAt(sampleWash(v_uv)) / 255.0;
+  float pigment = sampleWash(v_uv);
+  pigment = mix(pigment, pigment * (1.0 - u_colorLift * 0.68) + 0.05, u_colorLift);
+  vec3 rgb = colorAt(pigment) / 255.0;
   gl_FragColor = vec4(rgb, 1.0);
 }
 `
@@ -238,10 +240,25 @@ export function createWashRenderer(canvas) {
     grainAmp: gl.getUniformLocation(program, 'u_grainAmp'),
     seedX: gl.getUniformLocation(program, 'u_seedX'),
     seedY: gl.getUniformLocation(program, 'u_seedY'),
+    colorLift: gl.getUniformLocation(program, 'u_colorLift'),
+    c0: gl.getUniformLocation(program, 'u_c0'),
+    c1: gl.getUniformLocation(program, 'u_c1'),
+    c2: gl.getUniformLocation(program, 'u_c2'),
+    c3: gl.getUniformLocation(program, 'u_c3'),
+    c4: gl.getUniformLocation(program, 'u_c4'),
   }
 
   let width = 0
   let height = 0
+
+  function setColors(colors) {
+    const c = colors ?? {}
+    gl.uniform3f(uni.c0, c.c0[0], c.c0[1], c.c0[2])
+    gl.uniform3f(uni.c1, c.c1[0], c.c1[1], c.c1[2])
+    gl.uniform3f(uni.c2, c.c2[0], c.c2[1], c.c2[2])
+    gl.uniform3f(uni.c3, c.c3[0], c.c3[1], c.c3[2])
+    gl.uniform3f(uni.c4, c.c4[0], c.c4[1], c.c4[2])
+  }
 
   function setCfg(cfg, ambient) {
     const a = ambient ?? {}
@@ -268,6 +285,7 @@ export function createWashRenderer(canvas) {
     gl.uniform1f(uni.grainAmp, cfg.grainAmp + (a.grainAmp ?? 0))
     gl.uniform1f(uni.seedX, cfg.seedX)
     gl.uniform1f(uni.seedY, cfg.seedY)
+    gl.uniform1f(uni.colorLift, a.colorLift ?? 0)
   }
 
   return {
@@ -280,8 +298,9 @@ export function createWashRenderer(canvas) {
       gl.viewport(0, 0, w, h)
     },
 
-    render(cfg, ambient = null) {
+    render(cfg, colors, ambient = null) {
       setCfg(cfg, ambient)
+      setColors(colors)
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     },
 

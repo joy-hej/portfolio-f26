@@ -2,6 +2,10 @@ import { useEffect, useRef } from 'react'
 import { createWashRenderer } from './washGl.js'
 import './DappledLight.css'
 
+function clamp01(x) {
+  return Math.max(0, Math.min(1, x))
+}
+
 function rand(min, max) {
   return min + Math.random() * (max - min)
 }
@@ -31,6 +35,29 @@ export const DEFAULT_WASH = {
   grainAmp: 0.10379611985223766,
 }
 
+/** Pigment ramp: light → mid → dark (c0…c4). */
+export const DEFAULT_COLORS = {
+  c0: [242, 236, 220],
+  c1: [210, 214, 190],
+  c2: [150, 168, 120],
+  c3: [96, 118, 78],
+  c4: [58, 74, 52],
+}
+
+function cloneColors(c) {
+  return {
+    c0: [...c.c0],
+    c1: [...c.c1],
+    c2: [...c.c2],
+    c3: [...c.c3],
+    c4: [...c.c4],
+  }
+}
+
+/** Session defaults — `0` restores; `x` updates + copies to clipboard. */
+let savedWash = { ...DEFAULT_WASH }
+let savedColors = cloneColors(DEFAULT_COLORS)
+
 function randomWash() {
   return {
     seedX: rand(0, 40),
@@ -54,6 +81,111 @@ function randomWash() {
     bandWeight: rand(0.45, 0.75),
     grainScale: rand(12, 28),
     grainAmp: rand(0.04, 0.12),
+  }
+}
+
+function hslToRgb(h, s, l) {
+  const hh = ((h % 360) + 360) % 360
+  const c = (1 - Math.abs(2 * l - 1)) * s
+  const x = c * (1 - Math.abs(((hh / 60) % 2) - 1))
+  const m = l - c / 2
+  let r = 0
+  let g = 0
+  let b = 0
+  if (hh < 60) [r, g, b] = [c, x, 0]
+  else if (hh < 120) [r, g, b] = [x, c, 0]
+  else if (hh < 180) [r, g, b] = [0, c, x]
+  else if (hh < 240) [r, g, b] = [0, x, c]
+  else if (hh < 300) [r, g, b] = [x, 0, c]
+  else [r, g, b] = [c, 0, x]
+  return [
+    Math.round((r + m) * 255),
+    Math.round((g + m) * 255),
+    Math.round((b + m) * 255),
+  ]
+}
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+
+/**
+ * Multi-hue wash ramps — paper → mist → mid → deep → ink.
+ * Hues jump deliberately so c gets blues/pinks/purples, not one-tint monochrome.
+ */
+function randomColors() {
+  // [paperHue, mistHue, midHue, deepHue, inkHue]
+  const recipes = [
+    [42, 95, 100, 110, 115], // original sage
+    [48, 205, 230, 255, 270], // sky → periwinkle → violet
+    [20, 340, 330, 310, 285], // blush → rose → magenta → plum
+    [40, 280, 295, 265, 250], // cream → lavender → orchid → indigo
+    [25, 15, 340, 310, 275], // peach → coral → fuchsia → purple
+    [200, 190, 215, 230, 245], // ice → cyan → cobalt → midnight
+    [50, 350, 310, 280, 265], // butter → pink → lilac → violet
+    [210, 200, 185, 220, 235], // cool paper → teal → navy
+    [42, 95, 350, 340, 330], // cream → sage → dusty rose → wine
+    [45, 165, 250, 260, 270], // ivory → seafoam → periwinkle → indigo
+    [15, 25, 350, 335, 320], // blush → apricot → raspberry → berry
+    [220, 210, 280, 290, 255], // moon → soft blue → orchid → ink
+    [55, 85, 160, 200, 230], // citrus → chartreuse → teal → deep blue
+    [330, 300, 270, 240, 225], // pink mist → violet → blue → ink
+    [35, 200, 210, 25, 15], // complementary warm / cool jump
+    [50, 140, 330, 290, 270], // split triad: green, pink, purple
+  ]
+
+  const hues = pick(recipes).map((h) => h + rand(-12, 12))
+  const sats = [
+    rand(0.06, 0.16),
+    rand(0.18, 0.38),
+    rand(0.28, 0.55),
+    rand(0.32, 0.6),
+    rand(0.28, 0.55),
+  ]
+  if (Math.random() < 0.45) {
+    sats[2] = clamp01(sats[2] + 0.12)
+    sats[3] = clamp01(sats[3] + 0.1)
+  }
+
+  return {
+    c0: hslToRgb(hues[0], sats[0], rand(0.9, 0.96)),
+    c1: hslToRgb(hues[1], sats[1], rand(0.76, 0.88)),
+    c2: hslToRgb(hues[2], sats[2], rand(0.48, 0.64)),
+    c3: hslToRgb(hues[3], sats[3], rand(0.3, 0.44)),
+    c4: hslToRgb(hues[4], sats[4], rand(0.16, 0.28)),
+  }
+}
+
+function rgbCss([r, g, b]) {
+  return `rgb(${r}, ${g}, ${b})`
+}
+
+function formatJsObject(obj, indent = 2) {
+  const pad = ' '.repeat(indent)
+  const lines = Object.entries(obj).map(([key, value]) => {
+    if (Array.isArray(value)) {
+      return `${pad}${key}: [${value.join(', ')}],`
+    }
+    return `${pad}${key}: ${value},`
+  })
+  return `{\n${lines.join('\n')}\n}`
+}
+
+function configClipboardText(wash, colors) {
+  return [
+    'DEFAULT_WASH = ' + formatJsObject(wash),
+    '',
+    'DEFAULT_COLORS = ' + formatJsObject(colors),
+  ].join('\n')
+}
+
+async function copyConfig(wash, colors) {
+  const text = configClipboardText(wash, colors)
+  try {
+    await navigator.clipboard.writeText(text)
+    console.log('[dappled] copied wash + colors to clipboard\n' + text)
+  } catch (err) {
+    console.warn('[dappled] clipboard failed — copy from console:', text, err)
   }
 }
 
@@ -84,6 +216,11 @@ function makePaperGrainUrl() {
   return tile.toDataURL('image/png')
 }
 
+/** Finish lightening over this many viewports of scroll (lower = faster). */
+const SCROLL_DISTANCE_VH = 1
+/** Compress pigment ~halfway toward cream — dappling stays ~50%. */
+const MAX_COLOR_LIFT = 0.5
+
 /** Steady march through noise space — same speed at every moment. */
 function ambientWash(elapsedMs) {
   const t = elapsedMs * 0.001
@@ -95,10 +232,28 @@ function ambientWash(elapsedMs) {
   }
 }
 
+/** Scroll-driven in-place repaint — lighter greens/cream, not opacity fade. */
+function scrollPaint(progress) {
+  const p = progress
+  return {
+    colorLift: p * MAX_COLOR_LIFT,
+    brightWeight: p * 0.14,
+    bandWeight: -p * 0.13,
+    topLeftWeight: -p * 0.045,
+    lowerWeight: -p * 0.055,
+    brightRadius: p * 0.16,
+    bandMix: p * 0.035 + Math.sin(p * Math.PI) * 0.02,
+    warpAmpX: Math.sin(p * Math.PI * 0.9) * 0.03,
+    warpAmpY: Math.cos(p * Math.PI * 0.75) * 0.025,
+  }
+}
+
 export default function DappledLight() {
   const canvasRef = useRef(null)
   const grainRef = useRef(null)
-  const washRef = useRef({ ...DEFAULT_WASH })
+  const rootRef = useRef(null)
+  const washRef = useRef({ ...savedWash })
+  const colorsRef = useRef(cloneColors(savedColors))
 
   useEffect(() => {
     const grain = grainRef.current
@@ -123,14 +278,44 @@ export default function DappledLight() {
 
     let raf = 0
     let resizeTimer = 0
+    let scrollTarget = 0
+    let scrollSmooth = 0
     const ambientActive = !reduceMotion
     const startTime = performance.now()
 
+    const syncPaper = () => {
+      const paper = rgbCss(colorsRef.current.c0)
+      if (rootRef.current) rootRef.current.style.background = paper
+    }
+
+    const readScroll = () => {
+      const distance = Math.max(1, window.innerHeight * SCROLL_DISTANCE_VH)
+      scrollTarget = clamp01(window.scrollY / distance)
+    }
+
     const tick = (now = performance.now()) => {
-      if (ambientActive) {
-        renderer.render(washRef.current, ambientWash(now - startTime))
-        raf = requestAnimationFrame(tick)
+      const ease = reduceMotion ? 1 : 0.12
+      scrollSmooth += (scrollTarget - scrollSmooth) * ease
+      if (Math.abs(scrollTarget - scrollSmooth) <= 0.0008) {
+        scrollSmooth = scrollTarget
       }
+
+      const paint = {
+        ...(ambientActive ? ambientWash(now - startTime) : {}),
+        ...scrollPaint(scrollSmooth),
+      }
+      renderer.render(washRef.current, colorsRef.current, paint)
+
+      const scrollSettled = scrollSmooth === scrollTarget
+      if (ambientActive || !scrollSettled) {
+        raf = requestAnimationFrame(tick)
+      } else {
+        raf = 0
+      }
+    }
+
+    const kick = () => {
+      if (!raf) raf = requestAnimationFrame(tick)
     }
 
     const bake = () => {
@@ -138,12 +323,24 @@ export default function DappledLight() {
       const viewW = Math.max(1, Math.floor(window.innerWidth * dpr))
       const viewH = Math.max(1, Math.floor(window.innerHeight * dpr))
       renderer.resize(viewW, viewH)
-      renderer.render(washRef.current)
+      renderer.render(washRef.current, colorsRef.current, {
+        ...(ambientActive ? ambientWash(performance.now() - startTime) : {}),
+        ...scrollPaint(scrollSmooth),
+      })
+    }
+
+    const onScroll = () => {
+      readScroll()
+      kick()
     }
 
     const onResize = () => {
       window.clearTimeout(resizeTimer)
-      resizeTimer = window.setTimeout(bake, 120)
+      resizeTimer = window.setTimeout(() => {
+        bake()
+        readScroll()
+        kick()
+      }, 120)
     }
 
     const onKey = (e) => {
@@ -161,25 +358,37 @@ export default function DappledLight() {
         }
         console.log('[dappled] random wash', washRef.current)
         bake()
+      } else if (e.key === 'c' || e.key === 'C') {
+        colorsRef.current = randomColors()
+        syncPaper()
+        console.log('[dappled] random colors', colorsRef.current)
+        bake()
+      } else if (e.key === 'x' || e.key === 'X') {
+        savedWash = { ...washRef.current }
+        savedColors = cloneColors(colorsRef.current)
+        void copyConfig(savedWash, savedColors)
       } else if (e.key === '0') {
-        washRef.current = { ...DEFAULT_WASH }
-        console.log('[dappled] restored default wash')
+        washRef.current = { ...savedWash }
+        colorsRef.current = cloneColors(savedColors)
+        syncPaper()
+        console.log('[dappled] restored default wash + colors')
         bake()
       }
     }
 
+    syncPaper()
     bake()
-    if (ambientActive) {
-      renderer.render(washRef.current, ambientWash(0))
-      raf = requestAnimationFrame(tick)
-    }
+    readScroll()
+    kick()
 
+    window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
     window.addEventListener('keydown', onKey)
 
     return () => {
       cancelAnimationFrame(raf)
       window.clearTimeout(resizeTimer)
+      window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('keydown', onKey)
       renderer.destroy()
@@ -187,7 +396,7 @@ export default function DappledLight() {
   }, [])
 
   return (
-    <div className="organic" aria-hidden="true">
+    <div ref={rootRef} className="organic" aria-hidden="true">
       <canvas ref={canvasRef} className="organic__canvas" />
       <div ref={grainRef} className="organic__grain" />
     </div>
