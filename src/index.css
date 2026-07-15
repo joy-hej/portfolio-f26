@@ -1,0 +1,92 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+:root {
+  /* Font families */
+  --font-family-poppins: 'Poppins', sans-serif;
+ 
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  /* Font sizes */
+  --font-size-32: 32px;
+  --font-size-48: 48px;
+  --font-size-16: 16px;
+
+  /* Line heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-comfy: 1.5;
+
+  /* Letter spacing */
+  --letter-spacing-0: 0;
+
+  /* —— Figma text styles (matched by name) —— */
+
+  /* Subtitle: Poppins Regular 48 — Figma listed 100%; opened up for readability */
+  --text-Subtitle-font-family: var(--font-family-poppins);
+  --text-Subtitle-font-size: var(--font-size-48);
+  --text-Subtitle-font-weight: var(--font-weight-regular);
+  --text-Subtitle-line-height: var(--line-height-tight);
+  --text-Subtitle-letter-spacing: var(--letter-spacing-0);
+
+  /* body: Poppins Regular 16 */
+  --text-body-font-family: var(--font-family-poppins);
+  --text-body-font-size: var(--font-size-16);
+  --text-body-font-weight: var(--font-weight-regular);
+  --text-body-line-height: var(--line-height-normal);
+  --text-body-letter-spacing: var(--letter-spacing-0);
+
+  /* Untitled styles used in the frame (logo, nav) */
+  --text-logo-font-family: var(--font-family-poppins);
+  --text-logo-font-size: var(--font-size-32);
+  --text-logo-font-weight: var(--font-weight-bold);
+  --text-logo-line-height: var(--line-height-tight);
+  --text-logo-letter-spacing: var(--letter-spacing-0);
+
+  --text-nav-font-family: var(--font-family-poppins);
+  --text-nav-font-size: var(--font-size-16);
+  --text-nav-font-weight-active: var(--font-weight-bold);
+  --text-nav-font-weight: var(--font-weight-regular);
+  --text-nav-line-height: var(--line-height-normal);
+  --text-nav-letter-spacing: var(--letter-spacing-0);
+
+  /* Colors from frame */
+  --color-bg: #ddd8c4;
+  --color-text: #000000;
+  --color-nav-track: rgba(0, 0, 0, 0.05);
+  --color-nav-active: #ffffff;
+  --color-border: rgba(0, 0, 0, 0.1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-poppins);
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  background: var(--color-bg);
+}
+
+p {
+  margin: 0;
+}
+
+img {
+  display: block;
+}

@@ -1,0 +1,31 @@
+/* Ambient pigment drift; static grain overlay. */
+
+.organic {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #f2ecdc;
+}
+
+.organic__canvas {
+  position: absolute;
+  left: -24px;
+  top: 0;
+  width: calc(100% + 48px);
+  height: 100%;
+  display: block;
+  filter: blur(0.4px);
+}
+
+.organic__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  background-repeat: repeat;
+  /* 2048px texture shown at 512px → ~4× finer speckles, few tile repeats */
+  background-size: 512px 512px;
+  mix-blend-mode: color-burn;
+  pointer-events: none;
+}
