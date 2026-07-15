@@ -106,11 +106,25 @@
   padding-block: 5px;
 }
 
-.wireframe__pill {
+/* Transform lives on the wrap so backdrop-filter on the pill actually samples the page */
+.wireframe__pill-wrap {
   position: fixed;
   top: calc(var(--header-inset) + 5px);
-  left: 50%;
+  left: 0;
+  right: 0;
   z-index: 20;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wireframe__pill-wrap--hidden {
+  transform: translateY(calc(-100% - var(--header-inset) - 13px));
+  pointer-events: none;
+}
+
+.wireframe__pill {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -121,16 +135,10 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 1px 1px rgba(0, 0, 0, 0.03);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  transform: translateX(-50%);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-.wireframe__pill--hidden {
-  transform: translate(-50%, calc(-100% - var(--header-inset) - 13px));
-  pointer-events: none;
+  /* Both needed: Safari wants -webkit-, Firefox/Chrome want unprefixed */
+  -webkit-backdrop-filter: blur(28px) saturate(1.15);
+  backdrop-filter: blur(28px) saturate(1.15);
+  pointer-events: auto;
 }
 
 .wireframe__logo {
@@ -397,13 +405,12 @@
     animation: none;
   }
 
-  .wireframe__pill {
+  .wireframe__pill-wrap {
     transition: none;
   }
 
-  .wireframe__pill--hidden {
-    transform: translateX(-50%);
-    pointer-events: auto;
+  .wireframe__pill-wrap--hidden {
+    transform: none;
   }
 
   .wireframe__page,
