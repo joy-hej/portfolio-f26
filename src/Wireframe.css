@@ -302,6 +302,7 @@
 }
 
 .wireframe__media {
+  position: relative;
   width: 100%;
   aspect-ratio: 1184 / 666;
   overflow: clip;
@@ -319,6 +320,8 @@
 
 .wireframe__media img,
 .wireframe__media video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
