@@ -28,7 +28,6 @@
   border: 0;
 }
 
-/* Blend on outer wrapper; orbit on middle (transform on blend layer kills it) */
 .loader__asterisk {
   display: flex;
   align-items: center;
@@ -36,33 +35,11 @@
   mix-blend-mode: color-burn;
 }
 
-.loader__asterisk-orbit {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: loader-orbit 2.8s linear infinite;
-}
-
-.loader__asterisk-spin {
+.loader__asterisk-mark {
   color: #1e3d2f;
   width: min(28vw, 140px);
   height: auto;
   max-height: min(25vw, 124px);
   line-height: 0;
   user-select: none;
-}
-
-@keyframes loader-orbit {
-  from {
-    transform: rotate(0deg) translateX(min(12vw, 64px)) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(min(12vw, 64px)) rotate(-360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .loader__asterisk-orbit {
-    animation: none;
-  }
 }

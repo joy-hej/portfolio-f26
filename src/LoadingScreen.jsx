@@ -41,13 +41,11 @@ export default function LoadingScreen({ onFinished }) {
     >
       <span className="loader__sr">Loading</span>
       <div className="loader__asterisk" aria-hidden>
-        <div className="loader__asterisk-orbit">
-          <SquiggleMark
-            className="loader__asterisk-spin"
-            stroke="#1e3d2f"
-            drawOnMount
-          />
-        </div>
+        <SquiggleMark
+          className="loader__asterisk-mark"
+          stroke="#1e3d2f"
+          drawOnMount
+        />
       </div>
     </div>
   )
