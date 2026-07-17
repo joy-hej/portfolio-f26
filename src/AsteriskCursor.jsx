@@ -62,7 +62,7 @@ export default function AsteriskCursor() {
       className={`asterisk-cursor${hot ? ' asterisk-cursor--hot' : ''}${visible ? ' asterisk-cursor--visible' : ''}`}
       aria-hidden
     >
-      <SquiggleMark variant={hot ? 'hot' : 'default'} />
+      <SquiggleMark />
     </div>
   )
 }

@@ -8,13 +8,15 @@
   pointer-events: none;
   opacity: 0;
   width: 27px;
-  height: 25px;
+  height: 24px;
   line-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.12s ease;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.12s ease;
   will-change: transform;
   user-select: none;
 }
@@ -27,9 +29,9 @@
   opacity: 1;
 }
 
-/* Hover glyph is a separate path (≈120° clockwise); no scale */
+/* Same glyph, 120° clockwise — no scale */
 .asterisk-cursor--hot {
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotate(120deg);
 }
 
 html.has-asterisk-cursor,
@@ -40,5 +42,9 @@ html.has-asterisk-cursor * {
 @media (prefers-reduced-motion: reduce) {
   .asterisk-cursor {
     transition: opacity 0.12s ease;
+  }
+
+  .asterisk-cursor--hot {
+    transform: translate(-50%, -50%) rotate(120deg);
   }
 }
