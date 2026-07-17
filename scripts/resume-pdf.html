@@ -90,6 +90,10 @@
     line-height: normal;
   }
 
+  .skill-group + .skill-group {
+    margin-top: 4px;
+  }
+
   ul {
     margin: 0;
     padding-left: 15pt;
@@ -99,6 +103,10 @@
   li { margin: 0; }
 
   .job { margin: 0; }
+
+  .job + .job {
+    margin-top: 4px;
+  }
 </style>
 </head>
 <body>
@@ -120,12 +128,18 @@
 
     <section>
       <p class="section-title">Skills</p>
-      <p class="skill-title">Prototyping &amp; Fabrication</p>
-      <p class="skill-items">SolidWorks · Fusion 360 · 3D printing · Laser cutting · CNC Milling · Wood shop · Electronics · Microcontrollers (Arduino, ESP32) · Sewing</p>
-      <p class="skill-title">Human Factors &amp; UX Research</p>
-      <p class="skill-items">Usability testing · Cognitive task analysis · Heuristic evaluations · User research · Human-machine interaction · Validation &amp; verification testing · Regulatory compliance · MIL-STD 1472 · NUREG-0700</p>
-      <p class="skill-title">UX Design</p>
-      <p class="skill-items">Figma · Adobe Suite · Journey mapping · Information architecture · Wireframing &amp; prototyping · Interaction design · Visual hierarchy &amp; layout · Design systems</p>
+      <div class="skill-group">
+        <p class="skill-title">Prototyping &amp; Fabrication</p>
+        <p class="skill-items">SolidWorks · Fusion 360 · 3D printing · Laser cutting · CNC Milling · Wood shop · Electronics · Microcontrollers (Arduino, ESP32) · Sewing</p>
+      </div>
+      <div class="skill-group">
+        <p class="skill-title">Human Factors &amp; UX Research</p>
+        <p class="skill-items">Usability testing · Cognitive task analysis · Heuristic evaluations · User research · Human-machine interaction · Validation &amp; verification testing · Regulatory compliance · MIL-STD 1472 · NUREG-0700</p>
+      </div>
+      <div class="skill-group">
+        <p class="skill-title">UX Design</p>
+        <p class="skill-items">Figma · Adobe Suite · Journey mapping · Information architecture · Wireframing &amp; prototyping · Interaction design · Visual hierarchy &amp; layout · Design systems</p>
+      </div>
     </section>
 
     <section>

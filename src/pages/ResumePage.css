@@ -126,6 +126,10 @@
   gap: 0;
 }
 
+.resume__skill + .resume__skill {
+  margin-top: 4px;
+}
+
 .resume__skill-title {
   font-weight: 700;
 }
@@ -142,6 +146,10 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+
+.resume__job + .resume__job {
+  margin-top: 4px;
 }
 
 .resume__job-head {
