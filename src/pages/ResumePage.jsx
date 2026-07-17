@@ -32,7 +32,7 @@ const SKILLS = [
 const EXPERIENCE = [
   {
     role: 'Human Factors Engineering Associate',
-    meta: ' · Tetra Tech · Jul. 2024 – Oct. 2025',
+    meta: ' · Tetra Tech · Jul. 2024 – Dec. 2025',
     bullets: [
       'Evaluated how interfaces support operators’ sensory, cognitive, and physical needs; uncovered usability issues in control rooms and facilities; ensured designs met regulatory requirements.',
       'Synthesized technical constraints into clear, human-centred design requirements for engineering teams.',
