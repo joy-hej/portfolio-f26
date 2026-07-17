@@ -1,15 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <!-- Drawn path (not text) so the glyph fills the icon — fonts leave huge padding around ⟡ -->
+  <!-- Outline ⟡ (concave-sided diamond), scaled to fill the icon -->
   <path
-    fill="#000"
-    d="M16 1.2
-       L19.1 12.9
-       L30.8 16
-       L19.1 19.1
-       L16 30.8
-       L12.9 19.1
-       L1.2 16
-       L12.9 12.9
+    fill="none"
+    stroke="#000"
+    stroke-width="3.4"
+    stroke-linejoin="round"
+    stroke-linecap="square"
+    d="M16 2.2
+       Q18.6 12.8 29.8 16
+       Q18.6 19.2 16 29.8
+       Q13.4 19.2 2.2 16
+       Q13.4 12.8 16 2.2
        Z"
   />
 </svg>
