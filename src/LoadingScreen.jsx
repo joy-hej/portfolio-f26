@@ -1,41 +1,25 @@
 import { useEffect, useState } from 'react'
 import './LoadingScreen.css'
 
-const MIN_SHOW_MS = 700
-const MAX_WAIT_MS = 2500
-const FADE_MS = 520
-
-function preloadImage(src) {
-  return new Promise((resolve) => {
-    const img = new Image()
-    img.decoding = 'async'
-    img.onload = () => resolve()
-    img.onerror = () => resolve()
-    img.src = src
-  })
-}
+/** Brief branded splash — do not block on heavy media */
+const SHOW_MS = 900
+const FADE_MS = 420
 
 function wait(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms))
 }
 
 /**
- * @param {{ sources: string[], onFinished: () => void }} props
+ * @param {{ onFinished: () => void }} props
  */
-export default function LoadingScreen({ sources, onFinished }) {
+export default function LoadingScreen({ onFinished }) {
   const [fading, setFading] = useState(false)
 
   useEffect(() => {
     let cancelled = false
-    const start = performance.now()
 
     ;(async () => {
-      await Promise.race([
-        Promise.all(sources.map(preloadImage)),
-        wait(MAX_WAIT_MS),
-      ])
-      const elapsed = performance.now() - start
-      if (elapsed < MIN_SHOW_MS) await wait(MIN_SHOW_MS - elapsed)
+      await wait(SHOW_MS)
       if (cancelled) return
       setFading(true)
       await wait(FADE_MS)
@@ -45,7 +29,7 @@ export default function LoadingScreen({ sources, onFinished }) {
     return () => {
       cancelled = true
     }
-  }, [sources, onFinished])
+  }, [onFinished])
 
   return (
     <div
