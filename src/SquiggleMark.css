@@ -1,0 +1,22 @@
+/* Opt-in path draw: path ends at visual left, so -1 → 0 starts from the left tip */
+.squiggle-mark__path--draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: -1;
+  animation: squiggle-draw 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes squiggle-draw {
+  from {
+    stroke-dashoffset: -1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .squiggle-mark__path--draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import SquiggleMark from './SquiggleMark.jsx'
 import './LoadingScreen.css'
 
-/** Brief branded splash — do not block on heavy media */
-const SHOW_MS = 900
+/** Brief branded splash — hold long enough for squiggle path-draw (~1.15s) */
+const SHOW_MS = 1350
 const FADE_MS = 420
 
 function wait(ms) {
@@ -42,7 +42,11 @@ export default function LoadingScreen({ onFinished }) {
       <span className="loader__sr">Loading</span>
       <div className="loader__asterisk" aria-hidden>
         <div className="loader__asterisk-orbit">
-          <SquiggleMark className="loader__asterisk-spin" stroke="#1e3d2f" />
+          <SquiggleMark
+            className="loader__asterisk-spin"
+            stroke="#1e3d2f"
+            drawOnMount
+          />
         </div>
       </div>
     </div>
