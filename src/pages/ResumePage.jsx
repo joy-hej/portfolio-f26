@@ -99,30 +99,19 @@ const EXPERIENCE = [
 ]
 
 export default function ResumePage() {
-  const downloadPdf = () => {
-    const previousTitle = document.title
-    document.title = 'Joy-He-Resume'
-    const restore = () => {
-      document.title = previousTitle
-      window.removeEventListener('afterprint', restore)
-    }
-    window.addEventListener('afterprint', restore)
-    window.print()
-  }
-
   return (
     <article className="resume" data-reveal>
       <div className="resume__intro">
         <p className="resume__tldr text-h1">
           <em>tl;dr:</em> human-centered design, engineering, and making
         </p>
-        <button
-          type="button"
+        <a
           className="resume__download text-body"
-          onClick={downloadPdf}
+          href="/Joy-He-Resume.pdf"
+          download="Joy-He-Resume.pdf"
         >
           Download PDF
-        </button>
+        </a>
       </div>
 
       <div className="resume__card">
