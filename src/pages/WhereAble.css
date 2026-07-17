@@ -1,0 +1,273 @@
+/* WhereAble case-study diagrams, rebuilt as real elements (a11y-friendly) */
+
+/* "How it works" video: full-width landscape frame. The recording is a square
+   cream artboard with a dotted Figma selection border at its perimeter, so we
+   center a square crop, scale it a touch to trim that border, and fill the
+   letterbox with the same cream. */
+.wa-howto {
+  background: #edebe7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wa-howto__crop {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.wa-howto__crop video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+}
+
+.wa-diagram {
+  width: 100%;
+}
+
+.wa-diagram__title {
+  margin: 0 0 20px;
+  font-weight: 700;
+}
+
+/* --- User research insights: bubble cards --- */
+.wa-insights__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.wa-bubble {
+  position: relative;
+  margin: 0 0 8px;
+  padding: 16px 18px;
+  border: 1.5px solid currentColor;
+  border-radius: 22px;
+  line-height: 1.45;
+}
+
+/* Downward tail so the cards read as speech bubbles (outlined, transparent
+   fill — the inner triangle is painted in the page background). */
+.wa-bubble::before,
+.wa-bubble::after {
+  content: '';
+  position: absolute;
+  left: 28px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.wa-bubble::before {
+  bottom: -13px;
+  border-width: 13px 9px 0 9px;
+  border-color: currentColor transparent transparent transparent;
+}
+
+.wa-bubble::after {
+  bottom: -8px;
+  border-width: 13px 8px 0 8px;
+  border-color: #f1f1f1 transparent transparent transparent;
+}
+
+.wa-insights__note {
+  margin: 16px 0 0;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* --- Indication method comparison --- */
+.wa-indication {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.wa-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border: 1.5px solid rgba(127, 127, 127, 0.35);
+  border-radius: 14px;
+}
+
+.wa-option--chosen {
+  border-color: #2e9e4f;
+  border-width: 2px;
+  background: rgba(46, 158, 79, 0.08);
+}
+
+.wa-option__icon {
+  height: 54px;
+  width: auto;
+  align-self: flex-start;
+  margin-bottom: 2px;
+}
+
+.wa-option__icon--wide {
+  height: 50px;
+}
+
+.wa-option__label {
+  margin: 0;
+  font-weight: 700;
+}
+
+.wa-option__list {
+  margin: 0;
+  padding-left: 1.15em;
+}
+
+.wa-option__list li {
+  margin: 2px 0;
+}
+
+/* --- Form factor table --- */
+.wa-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.wa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375em;
+}
+
+.wa-table th,
+.wa-table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+}
+
+.wa-table thead th {
+  font-weight: 700;
+  border-bottom: 1.5px solid rgba(127, 127, 127, 0.5);
+}
+
+.wa-table tr-verdict {
+  white-space: nowrap;
+}
+
+.wa-table tbody tr.is-good {
+  background: rgba(46, 158, 79, 0.1);
+}
+
+.wa-table tbody tr.is-ok {
+  background: rgba(224, 168, 0, 0.12);
+}
+
+.wa-table tbody tr.is-bad {
+  background: rgba(214, 69, 69, 0.12);
+}
+
+.wa-table tbody tr.is-chosen td:first-child {
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 #2e9e4f;
+}
+
+/* --- Signalling strategies --- */
+.wa-signalling {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+  text-align: center;
+}
+
+.wa-strategy__label {
+  margin: 0 0 12px;
+  font-weight: 700;
+}
+
+.wa-belt {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.wa-strategy__stat {
+  margin: 10px 0 0;
+  font-weight: 700;
+}
+
+.wa-strategy__stat span {
+  font-weight: 400;
+}
+
+/* --- Current-output hardware flow --- */
+.wa-flow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wa-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 0;
+  min-width: 160px;
+  text-align: center;
+}
+
+.wa-stage__label {
+  margin: 0;
+  font-weight: 700;
+}
+
+.wa-stage__imgs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 120px;
+}
+
+.wa-stage__imgs img {
+  max-width: 100%;
+  max-height: 150px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.wa-stage__stat {
+  margin: 0;
+}
+
+.wa-flow__arrow {
+  align-self: center;
+  font-size: 28px;
+  color: #2f6fed;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 900px) {
+  .wa-insights__grid,
+  .wa-indication,
+  .wa-signalling {
+    grid-template-columns: 1fr;
+  }
+
+  .wa-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .wa-flow__arrow {
+    transform: rotate(90deg);
+  }
+}

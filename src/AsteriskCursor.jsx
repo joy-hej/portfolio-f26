@@ -53,7 +53,8 @@ export default function AsteriskCursor() {
         setHot(false)
         return
       }
-      setHot(Boolean(target.closest(SELECTABLE)))
+      const hit = target.closest(SELECTABLE)
+      setHot(Boolean(hit && !hit.classList.contains('site-nav__logo')))
     }
 
     const onLeave = () => setVisible(false)

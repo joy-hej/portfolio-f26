@@ -148,7 +148,12 @@ vec3 colorAt(float pigment) {
 void main() {
   float pigment = sampleWash(v_uv);
   pigment = mix(pigment, pigment * (1.0 - u_colorLift * 0.68) + 0.05, u_colorLift);
-  vec3 rgb = mix(colorAt(pigment), u_liftColor, u_colorLift) / 255.0;
+  vec3 base = colorAt(pigment);
+  /* Soft bloom: light pigment pools glow toward cream highlights */
+  float glow = smoothstep(0.5, 0.0, pigment);
+  vec3 bloom = mix(base, u_c0 + vec3(28.0, 24.0, 14.0), glow * 0.55);
+  bloom += vec3(glow * 16.0);
+  vec3 rgb = mix(bloom, u_liftColor, u_colorLift) / 255.0;
   gl_FragColor = vec4(rgb, 1.0);
 }
 `
@@ -190,7 +195,7 @@ export function createWashRenderer(canvas) {
       antialias: false,
       depth: false,
       stencil: false,
-      preserveDrawingBuffer: false,
+      preserveDrawingBuffer: true,
       powerPreference: 'low-power',
     }) ||
     canvas.getContext('experimental-webgl', {
@@ -198,6 +203,7 @@ export function createWashRenderer(canvas) {
       antialias: false,
       depth: false,
       stencil: false,
+      preserveDrawingBuffer: true,
     })
 
   if (!gl) return null

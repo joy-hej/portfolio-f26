@@ -1,10 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import locationIcon from './assets/portfolio/location.svg'
-import bookIcon from './assets/portfolio/book.svg'
-import tributaryImg from './assets/portfolio/tributary.png'
-import lightModeImg from './assets/portfolio/light-mode.png'
-import nudgeImg from './assets/portfolio/nudge.png'
-import whereableImg from './assets/portfolio/whereable.png'
+import locationIcon from './assets/icons/location.svg'
+import bookIcon from './assets/icons/book.svg'
+import tributaryImg from './assets/portfolio/tributary/tributary.png'
+import lightModeImg from './assets/portfolio/light-mode/light-mode.png'
+import nudgeImg from './assets/portfolio/nudge/nudge.png'
+import whereableImg from './assets/portfolio/whereable/whereable.png'
 import { readPacificSky } from './pacificSky'
 import './Wireframe.css'
 
@@ -246,7 +246,7 @@ export default function Wireframe() {
           {section === 'work' && (
             <>
               <section className="wireframe__intro" data-reveal>
-                <h1 className="wireframe__headline text-Subtitle">
+                <h1 className="wireframe__headline text-h1">
                   I design and engineer delightful
                   <br />
                   physical × digital interactions.
@@ -277,7 +277,7 @@ export default function Wireframe() {
                   </div>
                   <div className="wireframe__project-info">
                     <div className="wireframe__project-title-block">
-                      <h2 className="text-Subtitle">{project.title}</h2>
+                      <h2 className="text-h1">{project.title}</h2>
                       <p className="text-body">{project.year}</p>
                     </div>
                     <p className="wireframe__project-desc text-body">
@@ -291,21 +291,21 @@ export default function Wireframe() {
 
           {section === 'play' && (
             <section className="wireframe__placeholder" data-reveal>
-              <h1 className="wireframe__headline text-Subtitle">Play</h1>
+              <h1 className="wireframe__headline text-h1">Play</h1>
               <p className="text-body">Placeholder — play experiments coming soon.</p>
             </section>
           )}
 
           {section === 'about' && (
             <section className="wireframe__placeholder" data-reveal>
-              <h1 className="wireframe__headline text-Subtitle">About</h1>
+              <h1 className="wireframe__headline text-h1">About</h1>
               <p className="text-body">Placeholder — about copy coming soon.</p>
             </section>
           )}
 
           {section === 'resume' && (
             <section className="wireframe__placeholder" data-reveal>
-              <h1 className="wireframe__headline text-Subtitle">Resume</h1>
+              <h1 className="wireframe__headline text-h1">Resume</h1>
               <p className="text-body">Placeholder — resume link coming soon.</p>
             </section>
           )}

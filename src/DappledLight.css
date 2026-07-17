@@ -19,6 +19,17 @@
   filter: blur(0.4px);
 }
 
+/* Sit above the sharp wash so soft-light actually composites */
+.organic__canvas--bloom {
+  z-index: 1;
+  filter: blur(48px) saturate(1) brightness(0.8);
+  opacity: 0.85;
+  mix-blend-mode: hard-light;
+  transform: scale(1.06);
+  transform-origin: center center;
+  pointer-events: none;
+}
+
 .organic--plain .organic__canvas {
   visibility: hidden;
 }
@@ -26,6 +37,7 @@
 .organic__grain {
   position: absolute;
   inset: 0;
+  z-index: 2;
   opacity: 1;
   background-repeat: repeat;
   /* 2048px texture shown at 512px → ~4× finer speckles, few tile repeats */

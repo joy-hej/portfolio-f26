@@ -190,6 +190,7 @@ function lerpRgb(a, b, t) {
 
 export default function DappledLight() {
   const canvasRef = useRef(null)
+  const bloomRef = useRef(null)
   const grainRef = useRef(null)
   const rootRef = useRef(null)
   const washRef = useRef({ ...savedWash })
@@ -205,6 +206,7 @@ export default function DappledLight() {
 
   useEffect(() => {
     const canvas = canvasRef.current
+    const bloom = bloomRef.current
     if (!canvas) return
 
     const renderer = createWashRenderer(canvas)
@@ -213,6 +215,17 @@ export default function DappledLight() {
       return undefined
     }
 
+    const bloomCtx = bloom?.getContext('2d', { alpha: false }) ?? null
+
+    const syncBloom = () => {
+      if (!bloom || !bloomCtx) return
+      if (bloom.width !== canvas.width || bloom.height !== canvas.height) {
+        bloom.width = canvas.width
+        bloom.height = canvas.height
+      }
+      bloomCtx.globalCompositeOperation = 'copy'
+      bloomCtx.drawImage(canvas, 0, 0)
+    }
     const reduceMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches
@@ -263,6 +276,7 @@ export default function DappledLight() {
         ...scrollPaint(scrollSmooth),
       }
       renderer.render(washRef.current, colorsRef.current, paint)
+      syncBloom()
       syncPaper()
 
       const scrollSettled = scrollSmooth === scrollTarget
@@ -290,6 +304,7 @@ export default function DappledLight() {
         ...(ambientActive ? ambientWash(performance.now() - startTime) : {}),
         ...scrollPaint(scrollSmooth),
       })
+      syncBloom()
     }
 
     const onScroll = () => {
@@ -369,6 +384,7 @@ export default function DappledLight() {
   return (
     <div ref={rootRef} className="organic" aria-hidden="true">
       <canvas ref={canvasRef} className="organic__canvas" />
+      <canvas ref={bloomRef} className="organic__canvas organic__canvas--bloom" />
       <div ref={grainRef} className="organic__grain" />
     </div>
   )

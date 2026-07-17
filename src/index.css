@@ -18,8 +18,9 @@
   --font-weight-bold: 700;
 
   /* Font sizes */
-  --font-size-32: 32px;
   --font-size-48: 48px;
+  --font-size-32: 32px;
+  --font-size-24: 24px;
   --font-size-16: 16px;
 
   /* Line heights */
@@ -32,12 +33,19 @@
 
   /* —— Figma text styles (matched by name) —— */
 
-  /* Subtitle: Poppins Regular 48 — Figma listed 100%; opened up for readability */
-  --text-Subtitle-font-family: var(--font-family-poppins);
-  --text-Subtitle-font-size: var(--font-size-48);
-  --text-Subtitle-font-weight: var(--font-weight-regular);
-  --text-Subtitle-line-height: var(--line-height-tight);
-  --text-Subtitle-letter-spacing: var(--letter-spacing-0);
+  /* h1 (a.k.a. Subtitle in Figma — identical styles): Poppins Regular 48 */
+  --text-h1-font-family: var(--font-family-poppins);
+  --text-h1-font-size: var(--font-size-48);
+  --text-h1-font-weight: var(--font-weight-regular);
+  --text-h1-line-height: var(--line-height-tight);
+  --text-h1-letter-spacing: var(--letter-spacing-0);
+
+  /* h2: Poppins Regular 24 */
+  --text-h2-font-family: var(--font-family-poppins);
+  --text-h2-font-size: var(--font-size-24);
+  --text-h2-font-weight: var(--font-weight-regular);
+  --text-h2-line-height: var(--line-height-tight);
+  --text-h2-letter-spacing: var(--letter-spacing-0);
 
   /* body: Poppins Regular 16 */
   --text-body-font-family: var(--font-family-poppins);
@@ -66,6 +74,13 @@
   --color-nav-track: rgba(255, 255, 255, 0.14);
   --color-nav-active: #ffffff;
   --color-border: rgba(0, 0, 0, 0.1);
+
+  /* Layout — equal space above and below the nav */
+  --nav-gutter: 40px;
+  --header-inset: var(--nav-gutter);
+  --page-pad-x: 200px;
+  --header-block: 62px;
+  --card-peek: 18vh;
 
   /* Fallback ✳ if custom follower is off (touch / coarse pointer) */
   --cursor-asterisk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%23000' transform='translate(16 16)'%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(45)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(90)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(135)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(180)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(225)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(270)'/%3E%3Cpolygon points='-1.15%2C-13.5 1.15%2C-13.5 0.35%2C-1.1 -0.35%2C-1.1' transform='rotate(315)'/%3E%3Ccircle r='1.5'/%3E%3C/g%3E%3C/svg%3E")
