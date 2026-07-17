@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './LoadingScreen.css'
 
 const MIN_SHOW_MS = 700
+const MAX_WAIT_MS = 2500
 const FADE_MS = 520
 
 function preloadImage(src) {
@@ -29,7 +30,10 @@ export default function LoadingScreen({ sources, onFinished }) {
     const start = performance.now()
 
     ;(async () => {
-      await Promise.all(sources.map(preloadImage))
+      await Promise.race([
+        Promise.all(sources.map(preloadImage)),
+        wait(MAX_WAIT_MS),
+      ])
       const elapsed = performance.now() - start
       if (elapsed < MIN_SHOW_MS) await wait(MIN_SHOW_MS - elapsed)
       if (cancelled) return

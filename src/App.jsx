@@ -19,17 +19,15 @@ import AuraPage from './pages/play/AuraPage.jsx'
 import ChatHellPage from './pages/play/ChatHellPage.jsx'
 import OceanEyesPage from './pages/play/OceanEyesPage.jsx'
 import ProjectStubPage from './pages/ProjectStubPage.jsx'
-import { PLAY_PROJECTS, PROJECTS } from './data'
+import { PROJECTS } from './data'
 import locationIcon from './assets/icons/location.svg'
 import bookIcon from './assets/icons/book.svg'
-import aboutPhoto from './assets/portfolio/about-photo.png'
 
+/* Only homepage above-the-fold media — not play/about/case-study assets */
 const IMAGE_SOURCES = [
   locationIcon,
   bookIcon,
-  aboutPhoto,
   ...PROJECTS.map((p) => p.image),
-  ...PLAY_PROJECTS.map((p) => p.image).filter(Boolean),
 ]
 
 function AppRoutes() {
