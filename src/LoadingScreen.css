@@ -1,3 +1,5 @@
+/* Blend on the fixed root — descendants are isolated inside this stacking
+   context, so mix-blend on an inner wrapper never reaches the page. */
 .loader {
   position: fixed;
   inset: 0;
@@ -6,6 +8,7 @@
   align-items: center;
   justify-content: center;
   background: transparent;
+  mix-blend-mode: overlay;
   opacity: 1;
   transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: auto;
@@ -32,7 +35,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  mix-blend-mode: overlay;
 }
 
 .loader__asterisk-mark {

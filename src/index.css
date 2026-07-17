@@ -126,8 +126,8 @@ img {
   display: block;
 }
 
-/* Hidden under splash but still in DOM so homepage images start fetching */
+/* Keep page painted under the transparent splash so overlay blend has a
+   backdrop; block interaction until the loader finishes. */
 .app-boot {
-  opacity: 0;
   pointer-events: none;
 }
