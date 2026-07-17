@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { Component, Suspense, useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import SiteNav from '../components/SiteNav'
 import SiteFooter from '../components/SiteFooter'
@@ -9,12 +9,11 @@ function useRevealOnScroll(rootRef, resetKey) {
     const root = rootRef.current
     if (!root) return undefined
 
-    const nodes = root.querySelectorAll('[data-reveal]')
-    if (!nodes.length) return undefined
-
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduce) {
-      nodes.forEach((el) => el.classList.add('is-revealed'))
+      root.querySelectorAll('[data-reveal]').forEach((el) => {
+        el.classList.add('is-revealed')
+      })
       return undefined
     }
 
@@ -30,17 +29,70 @@ function useRevealOnScroll(rootRef, resetKey) {
       { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
     )
 
-    nodes.forEach((el) => {
-      const top = el.getBoundingClientRect().top
-      if (top < window.innerHeight * 0.92) {
-        requestAnimationFrame(() => el.classList.add('is-revealed'))
-      } else {
-        io.observe(el)
-      }
-    })
+    const observeNew = () => {
+      root.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
+        const top = el.getBoundingClientRect().top
+        if (top < window.innerHeight * 0.92) {
+          requestAnimationFrame(() => el.classList.add('is-revealed'))
+        } else {
+          io.observe(el)
+        }
+      })
+    }
 
-    return () => io.disconnect()
+    observeNew()
+    // Lazy route content mounts after Suspense resolves — observe those nodes
+    const mo = new MutationObserver(() => observeNew())
+    mo.observe(root, { childList: true, subtree: true })
+
+    return () => {
+      io.disconnect()
+      mo.disconnect()
+    }
   }, [rootRef, resetKey])
+}
+
+class RouteErrorBoundary extends Component {
+  state = { error: null }
+
+  static getDerivedStateFromError(error) {
+    return { error }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.error) {
+      this.setState({ error: null })
+    }
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="route-fallback">
+          <p className="text-body">Couldn’t load this page.</p>
+          <button
+            type="button"
+            className="text-body route-fallback__retry"
+            onClick={() => window.location.reload()}
+          >
+            Reload
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+function RouteFallback() {
+  return (
+    <div className="route-fallback" role="status" aria-live="polite">
+      <span className="route-fallback__mark" aria-hidden>
+        ⟡
+      </span>
+      <span className="route-fallback__sr">Loading</span>
+    </div>
+  )
 }
 
 export default function RootLayout() {
@@ -73,7 +125,11 @@ export default function RootLayout() {
     <div className={`layout${isCase ? ' layout--case' : ''}`}>
       <SiteNav />
       <main ref={mainRef} className="layout__main">
-        <Outlet />
+        <RouteErrorBoundary resetKey={location.pathname}>
+          <Suspense fallback={<RouteFallback />}>
+            <Outlet />
+          </Suspense>
+        </RouteErrorBoundary>
         <SiteFooter />
       </main>
     </div>

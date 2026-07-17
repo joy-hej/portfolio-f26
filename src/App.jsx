@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useState } from 'react'
+import { lazy, useCallback, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import DappledLight from './DappledLight.jsx'
 import AsteriskCursor from './AsteriskCursor.jsx'
@@ -25,34 +25,32 @@ const ProjectStubPage = lazy(() => import('./pages/ProjectStubPage.jsx'))
 
 function AppRoutes() {
   return (
-    <Suspense fallback={null}>
-      <Routes>
-        <Route element={<RootLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="play" element={<PlayPage />} />
-          <Route path="play/color-picker-lamp" element={<ColorPickerLampPage />} />
-          <Route path="play/duet-mug" element={<DuetMugPage />} />
-          <Route
-            path="play/noise-cancellation"
-            element={<NoiseCancellationPage />}
-          />
-          <Route path="play/aura" element={<AuraPage />} />
-          <Route
-            path="play/chat-am-i-going-to-hell"
-            element={<ChatHellPage />}
-          />
-          <Route path="play/ocean-eyes" element={<OceanEyesPage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="resume" element={<ResumePage />} />
-          <Route path="work/tributary" element={<TributaryPage />} />
-          <Route path="work/light-mode" element={<LightModePage />} />
-          <Route path="work/nudge" element={<NudgePage />} />
-          <Route path="work/whereable" element={<WhereAblePage />} />
-          <Route path="work/:slug" element={<ProjectStubPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route element={<RootLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="play" element={<PlayPage />} />
+        <Route path="play/color-picker-lamp" element={<ColorPickerLampPage />} />
+        <Route path="play/duet-mug" element={<DuetMugPage />} />
+        <Route
+          path="play/noise-cancellation"
+          element={<NoiseCancellationPage />}
+        />
+        <Route path="play/aura" element={<AuraPage />} />
+        <Route
+          path="play/chat-am-i-going-to-hell"
+          element={<ChatHellPage />}
+        />
+        <Route path="play/ocean-eyes" element={<OceanEyesPage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="resume" element={<ResumePage />} />
+        <Route path="work/tributary" element={<TributaryPage />} />
+        <Route path="work/light-mode" element={<LightModePage />} />
+        <Route path="work/nudge" element={<NudgePage />} />
+        <Route path="work/whereable" element={<WhereAblePage />} />
+        <Route path="work/:slug" element={<ProjectStubPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   )
 }
 
@@ -64,11 +62,7 @@ function App() {
     <BrowserRouter>
       <DappledLight />
       {!ready && <LoadingScreen onFinished={onFinished} />}
-      {/* Mount homepage under the splash so card images start fetching immediately */}
-      <div
-        className={ready ? undefined : 'app-boot'}
-        aria-hidden={!ready}
-      >
+      <div className={ready ? undefined : 'app-boot'} aria-hidden={!ready}>
         <AppRoutes />
         {ready && <AsteriskCursor />}
       </div>
