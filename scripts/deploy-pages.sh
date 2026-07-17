@@ -9,12 +9,33 @@ REMOTE="https://github.com/joy-hej/joy-hej.github.io.git"
 cd "$ROOT"
 npm run build
 
+# Refuse to publish an empty/broken build (a prior deploy wiped the live site).
+for required in index.html 404.html CNAME assets; do
+  if [[ ! -e "$ROOT/dist/$required" ]]; then
+    echo "error: dist/$required missing after build; aborting deploy" >&2
+    exit 1
+  fi
+done
+asset_count="$(find "$ROOT/dist/assets" -type f | wc -l | tr -d ' ')"
+if [[ "$asset_count" -lt 5 ]]; then
+  echo "error: dist/assets looks empty ($asset_count files); aborting deploy" >&2
+  exit 1
+fi
+
 rm -rf "$PAGES_DIR"
 git clone --depth 1 "$REMOTE" "$PAGES_DIR"
 cd "$PAGES_DIR"
 find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 cp -R "$ROOT/dist/." .
 touch .nojekyll
+
+# Final safety: never push a pages commit without the SPA entrypoints.
+for required in index.html 404.html CNAME; do
+  if [[ ! -f "$required" ]]; then
+    echo "error: $required missing in pages staging dir; aborting deploy" >&2
+    exit 1
+  fi
+done
 
 git add -A
 if git diff --cached --quiet; then
