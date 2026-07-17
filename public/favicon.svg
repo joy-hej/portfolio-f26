@@ -1,11 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="9 9 14 14">
-  <text
-    x="16"
-    y="16"
-    dominant-baseline="central"
-    text-anchor="middle"
-    font-size="28"
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Drawn path (not text) so the glyph fills the icon — fonts leave huge padding around ⟡ -->
+  <path
     fill="#000"
-    font-family="system-ui, 'Segoe UI Symbol', 'Apple Symbols', sans-serif"
-  >⟡</text>
+    d="M16 1.2
+       L19.1 12.9
+       L30.8 16
+       L19.1 19.1
+       L16 30.8
+       L12.9 19.1
+       L1.2 16
+       L12.9 12.9
+       Z"
+  />
 </svg>
