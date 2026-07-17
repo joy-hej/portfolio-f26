@@ -43,7 +43,7 @@ export default function LoadingScreen({ onFinished }) {
       <div className="loader__asterisk" aria-hidden>
         <SquiggleMark
           className="loader__asterisk-mark"
-          stroke="#1e3d2f"
+          stroke="#000"
           drawOnMount
         />
       </div>
