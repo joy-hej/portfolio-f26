@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import SquiggleMark from './SquiggleMark.jsx'
 import './LoadingScreen.css'
 
 /** Brief branded splash — do not block on heavy media */
@@ -41,7 +42,7 @@ export default function LoadingScreen({ onFinished }) {
       <span className="loader__sr">Loading</span>
       <div className="loader__asterisk" aria-hidden>
         <div className="loader__asterisk-orbit">
-          <span className="loader__asterisk-spin">⟡</span>
+          <SquiggleMark className="loader__asterisk-spin" stroke="#1e3d2f" />
         </div>
       </div>
     </div>

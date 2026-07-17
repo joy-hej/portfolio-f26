@@ -435,6 +435,18 @@
   opacity: 1;
 }
 
+.wireframe__footer-made {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.wireframe__footer-squiggle {
+  width: 0.95em;
+  height: auto;
+  flex-shrink: 0;
+}
+
 @media (max-width: 1280px) {
   .wireframe {
     --header-inset: 32px;

@@ -87,8 +87,8 @@ html.page--case .organic {
 }
 
 .route-fallback__mark {
-  font-size: 28px;
-  line-height: 1;
+  width: 28px;
+  height: auto;
   opacity: 0.55;
   animation: route-fallback-pulse 1.2s ease-in-out infinite;
 }

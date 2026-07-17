@@ -45,8 +45,10 @@
 
 .loader__asterisk-spin {
   color: #1e3d2f;
-  font-size: min(28vw, 140px);
-  line-height: 1;
+  width: min(28vw, 140px);
+  height: auto;
+  max-height: min(25vw, 124px);
+  line-height: 0;
   user-select: none;
 }
 

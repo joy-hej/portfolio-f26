@@ -53,6 +53,18 @@
   opacity: 1;
 }
 
+.site-footer__made {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.site-footer__squiggle {
+  width: 0.95em;
+  height: auto;
+  flex-shrink: 0;
+}
+
 @media (max-width: 900px) {
   .site-footer {
     flex-direction: column;

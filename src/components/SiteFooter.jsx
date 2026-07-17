@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { readPacificSky } from '../pacificSky'
+import SquiggleMark from '../SquiggleMark.jsx'
 import './SiteFooter.css'
 
 export default function SiteFooter() {
@@ -38,7 +39,9 @@ export default function SiteFooter() {
       <div className="site-footer__col site-footer__col--end">
         <p className="site-footer__title">changelog</p>
         <p className="text-body">07-16-26</p>
-        <p className="text-body site-footer__note">⟡ made in berkeley</p>
+        <p className="text-body site-footer__note site-footer__made">
+          <SquiggleMark className="site-footer__squiggle" /> made in berkeley
+        </p>
       </div>
     </footer>
   )

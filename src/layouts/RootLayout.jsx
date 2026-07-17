@@ -2,6 +2,7 @@ import { Component, Suspense, useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import SiteNav from '../components/SiteNav'
 import SiteFooter from '../components/SiteFooter'
+import SquiggleMark from '../SquiggleMark.jsx'
 import './layout.css'
 
 function useRevealOnScroll(rootRef, resetKey) {
@@ -87,9 +88,7 @@ class RouteErrorBoundary extends Component {
 function RouteFallback() {
   return (
     <div className="route-fallback" role="status" aria-live="polite">
-      <span className="route-fallback__mark" aria-hidden>
-        ⟡
-      </span>
+      <SquiggleMark className="route-fallback__mark" />
       <span className="route-fallback__sr">Loading</span>
     </div>
   )
