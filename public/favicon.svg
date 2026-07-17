@@ -1,9 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <text
     x="16"
-    y="22"
+    y="16"
+    dominant-baseline="central"
     text-anchor="middle"
-    font-size="24"
+    font-size="30"
     fill="#000"
     font-family="system-ui, 'Segoe UI Symbol', 'Apple Symbols', sans-serif"
   >⟡</text>
