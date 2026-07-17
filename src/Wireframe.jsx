@@ -337,9 +337,9 @@ export default function Wireframe() {
             </div>
             <div className="wireframe__footer-col wireframe__footer-col--end">
               <p className="wireframe__footer-title">changelog</p>
-              <p className="text-body">07-15-26</p>
+              <p className="text-body">07-16-26</p>
               <p className="text-body wireframe__footer-note">
-                ✳ made in berkeley
+                ⟡ made in berkeley
               </p>
             </div>
           </footer>

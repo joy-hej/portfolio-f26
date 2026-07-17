@@ -1,18 +1,8 @@
 import { useEffect, useState } from 'react'
 import './LoadingScreen.css'
 
-const TIP_HALF = 0.55
-const INNER_HALF = 0.18
-const INNER_Y = 1.1
-const LEN = 13.5
-const HUB = 1.1
-const ANGLES = [0, 45, 90, 135, 180, 225, 270, 315]
-const SIZE = 40
-const MID = SIZE / 2
 const MIN_SHOW_MS = 700
 const FADE_MS = 520
-
-const SPOKE = `-${TIP_HALF},${-LEN} ${TIP_HALF},${-LEN} ${INNER_HALF},${-INNER_Y} -${INNER_HALF},${-INNER_Y}`
 
 function preloadImage(src) {
   return new Promise((resolve) => {
@@ -62,23 +52,9 @@ export default function LoadingScreen({ sources, onFinished }) {
     >
       <span className="loader__sr">Loading</span>
       <div className="loader__asterisk" aria-hidden>
-        <svg
-          width={SIZE}
-          height={SIZE}
-          viewBox={`0 0 ${SIZE} ${SIZE}`}
-          fill="#000"
-        >
-          <g transform={`translate(${MID} ${MID})`}>
-            {ANGLES.map((deg) => (
-              <polygon
-                key={deg}
-                points={SPOKE}
-                transform={deg ? `rotate(${deg})` : undefined}
-              />
-            ))}
-            <circle r={HUB} />
-          </g>
-        </svg>
+        <div className="loader__asterisk-orbit">
+          <span className="loader__asterisk-spin">⟡</span>
+        </div>
       </div>
     </div>
   )

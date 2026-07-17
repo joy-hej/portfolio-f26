@@ -69,7 +69,7 @@ function BeltDiagram({ motors, label }) {
         fill="#6d3bd1"
         fontSize="16"
       >
-        ✳
+        ⟡
       </text>
     </svg>
   )

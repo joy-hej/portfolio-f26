@@ -37,8 +37,8 @@ export default function SiteFooter() {
       </div>
       <div className="site-footer__col site-footer__col--end">
         <p className="site-footer__title">changelog</p>
-        <p className="text-body">07-15-26</p>
-        <p className="text-body site-footer__note">✳ made in berkeley</p>
+        <p className="text-body">07-16-26</p>
+        <p className="text-body site-footer__note">⟡ made in berkeley</p>
       </div>
     </footer>
   )

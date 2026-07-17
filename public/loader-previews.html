@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loader motion previews</title>
+    <style>
+      :root {
+        --ink: #1e3d2f;
+        --wash: #f2ecdc;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100svh;
+        font-family: 'Poppins', system-ui, sans-serif;
+        color: #111;
+        background:
+          radial-gradient(ellipse 80% 60% at 20% 30%, #d4e0c8 0%, transparent 55%),
+          radial-gradient(ellipse 70% 50% at 80% 70%, #c8b89a 0%, transparent 50%),
+          var(--wash);
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 24px 64px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        font-weight: 400;
+      }
+
+      .lede {
+        margin: 0 0 32px;
+        opacity: 0.7;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.55);
+        border-radius: 16px;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+      }
+
+      .stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 160px;
+        border-radius: 12px;
+        background:
+          radial-gradient(circle at 30% 40%, #c5d4b8, transparent 45%),
+          radial-gradient(circle at 70% 60%, #e0d2b0, transparent 40%),
+          #ebe4d4;
+        overflow: hidden;
+      }
+
+      .star-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        mix-blend-mode: color-burn;
+      }
+
+      .star {
+        color: var(--ink);
+        font-size: 64px;
+        line-height: 1;
+        user-select: none;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .card p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.4;
+        opacity: 0.7;
+      }
+
+      /* 1. Spin (current) */
+      .motion-spin .star {
+        animation: spin 2.4s linear infinite;
+      }
+
+      /* 2. Pulse / breathe */
+      .motion-pulse .star {
+        animation: pulse 1.8s ease-in-out infinite;
+      }
+
+      /* 3. Fade blink */
+      .motion-fade .star {
+        animation: fade 1.6s ease-in-out infinite;
+      }
+
+      /* 4. Tilt sway */
+      .motion-tilt .star {
+        animation: tilt 2s ease-in-out infinite;
+      }
+
+      /* 5. Orbit */
+      .motion-orbit .star-wrap {
+        animation: orbit 2.8s linear infinite;
+      }
+
+      /* 6. Throb + tilt */
+      .motion-throb .star {
+        animation: throb 1.9s ease-in-out infinite;
+      }
+
+      /* 7. Draw-on (approximate with clip for glyph) */
+      .motion-draw .star {
+        animation: draw 2.4s ease-in-out infinite;
+      }
+
+      /* 8. Float */
+      .motion-float .star {
+        animation: float 2.2s ease-in-out infinite;
+      }
+
+      /* 9. Scale-in then settle (loop for preview) */
+      .motion-settle .star {
+        animation: settle 2.6s ease-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(0.88);
+        }
+        50% {
+          transform: scale(1.08);
+        }
+      }
+
+      @keyframes fade {
+        0%,
+        100% {
+          opacity: 0.25;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes tilt {
+        0%,
+        100% {
+          transform: rotate(-14deg);
+        }
+        50% {
+          transform: rotate(14deg);
+        }
+      }
+
+      @keyframes orbit {
+        from {
+          transform: rotate(0deg) translateX(64px) rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg) translateX(64px) rotate(-360deg);
+        }
+      }
+
+      @keyframes throb {
+        0%,
+        100% {
+          transform: scale(0.9) rotate(-10deg);
+        }
+        50% {
+          transform: scale(1.12) rotate(10deg);
+        }
+      }
+
+      @keyframes draw {
+        0% {
+          clip-path: inset(0 100% 0 0);
+          opacity: 0.4;
+        }
+        45%,
+        55% {
+          clip-path: inset(0 0 0 0);
+          opacity: 1;
+        }
+        100% {
+          clip-path: inset(0 0 0 100%);
+          opacity: 0.4;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(10px);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+      }
+
+      @keyframes settle {
+        0% {
+          transform: scale(0.2);
+          opacity: 0;
+        }
+        35% {
+          transform: scale(1.12);
+          opacity: 1;
+        }
+        55% {
+          transform: scale(0.96);
+        }
+        70%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .star,
+        .star-wrap {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Loader motion previews</h1>
+      <p class="lede">
+        Same ⟡ + color-burn on a wash. Pick one and tell me which to use.
+      </p>
+      <div class="grid">
+        <article class="card motion-spin">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Spin</h2>
+          <p>Full 360° rotation — current loader.</p>
+        </article>
+
+        <article class="card motion-pulse">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Pulse / breathe</h2>
+          <p>Soft scale up and down.</p>
+        </article>
+
+        <article class="card motion-fade">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Fade blink</h2>
+          <p>Opacity in and out.</p>
+        </article>
+
+        <article class="card motion-tilt">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Tilt sway</h2>
+          <p>Rocks like the hover tilt.</p>
+        </article>
+
+        <article class="card motion-orbit">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Orbit</h2>
+          <p>Drifts in a circle, stays upright.</p>
+        </article>
+
+        <article class="card motion-throb">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Throb + tilt</h2>
+          <p>Pulse combined with a slight rock.</p>
+        </article>
+
+        <article class="card motion-draw">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Draw-on</h2>
+          <p>Wipe reveal (approx. for a glyph).</p>
+        </article>
+
+        <article class="card motion-float">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Float</h2>
+          <p>Gentle up and down.</p>
+        </article>
+
+        <article class="card motion-settle">
+          <div class="stage">
+            <div class="star-wrap"><span class="star">⟡</span></div>
+          </div>
+          <h2>Scale-in then settle</h2>
+          <p>Enters, then rests (loops for preview).</p>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>
